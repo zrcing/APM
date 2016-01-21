@@ -1,5 +1,6 @@
 <?php
 
+use App\Models\Task;
 /*
 |--------------------------------------------------------------------------
 | Routes File
@@ -11,7 +12,22 @@
 |
 */
 
+Route::any('test-{id?}-{cc?}.html', function($id = null, $cc = null){
+    echo $id . " ";
+    echo $cc;
+})->where([ 'id' => '[0-9]*' ]);
+
 Route::get('/', function () {
+    $a = Task::all();
+    foreach ($a as $v) {
+        //print_r($v);
+    }
+    $a = Task::where('status', 1)->take(1)->get();
+    $a = Task::findOrNew(1);
+    $a->task_name = '我是';
+    $a->save();
+    print_r($a);
+    exit;
     return view('welcome');
 });
 
@@ -27,5 +43,16 @@ Route::get('/', function () {
 */
 
 Route::group(['middleware' => ['web']], function () {
-    //
+    // Auth
+    Route::controllers([
+        'auth' => 'Auth\AuthController',
+    ]);
+    
+    Route::group(['middleware' => ['auth']], function () {
+        
+        Route::get('task.html', 'TaskController@monitoring');
+        Route::match(['get', 'post'], 'task-store.html', 'TaskController@store');
+    });
 });
+
+

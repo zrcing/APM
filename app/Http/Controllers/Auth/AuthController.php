@@ -2,11 +2,14 @@
 
 namespace App\Http\Controllers\Auth;
 
-use App\User;
+use App\Models\User;
 use Validator;
 use App\Http\Controllers\Controller;
 use Illuminate\Foundation\Auth\ThrottlesLogins;
 use Illuminate\Foundation\Auth\AuthenticatesAndRegistersUsers;
+use Illuminate\Support\Facades\Auth;
+//use App\Http\Requests\Request;
+use Illuminate\Http\Request;
 
 class AuthController extends Controller
 {
@@ -28,7 +31,9 @@ class AuthController extends Controller
      *
      * @var string
      */
-    protected $redirectTo = '/';
+    protected $redirectTo = 'task.html';
+    
+    protected $redirectAfterLogout = 'auth/login';
 
     /**
      * Create a new authentication controller instance.
@@ -37,7 +42,8 @@ class AuthController extends Controller
      */
     public function __construct()
     {
-        $this->middleware('guest', ['except' => 'logout']);
+        //Except getLogout function 
+        $this->middleware('guest', ['except' => 'getLogout']);
     }
 
     /**
@@ -51,7 +57,8 @@ class AuthController extends Controller
         return Validator::make($data, [
             'name' => 'required|max:255',
             'email' => 'required|email|max:255|unique:users',
-            'password' => 'required|confirmed|min:6',
+            //'password' => 'required|confirmed|min:6',
+            'password' => 'required|min:6',
         ]);
     }
 
@@ -68,5 +75,17 @@ class AuthController extends Controller
             'email' => $data['email'],
             'password' => bcrypt($data['password']),
         ]);
+    }
+    
+    public function postLogin(Request $request)
+    {
+        if (Auth::attempt(['name' => $request->input('name'), 'password' => $request->input('password')])) {
+            // Authentication passed...
+            //return redirect()->intended('dashboard');
+            return redirect($this->redirectTo);
+        }
+        
+        return redirect('auth/login')
+        ->with('error', trans("front/login.login-failure"));
     }
 }
