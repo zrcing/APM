@@ -23,9 +23,7 @@ class TaskController extends Controller
     
     public function monitoring()
     {
-        
-        print_r(auth()->user());
-        
+        //print_r(auth()->user());
         $page = 2;
         $tasks = Task::query()->paginate($page);
         $links = $tasks->render();

@@ -7,4 +7,5 @@
 <input type="text" name="name">
 <input type="text" name="password">
 <button type="submit">Login</button>
+<a href="{{ url('auth/register') }}"><button type="button">Register</button></a>
 </form>
