@@ -20,12 +20,12 @@ class Paper
 
 interface Observerable
 {
-    public function update();
+    public function handle();
 }
 
 class Subscriber implements Observerable
 {
-    public function update()
+    public function handle()
     {
         echo 'Subscriber callback';
     }
