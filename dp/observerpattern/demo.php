@@ -12,7 +12,7 @@ class Paper
     {
         if (!empty($this->observers)) {
             foreach ($this->observers as $observer) {
-                $observer->update();
+                $observer->handle();
             }
         }
     }
