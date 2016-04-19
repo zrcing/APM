@@ -31,6 +31,7 @@ class TaskController extends Controller
         return view('front.task.monitoring', compact('tasks', 'links'));
     }
     
+    
     public function store(Request $request)
     {
         $a = $request->all();
